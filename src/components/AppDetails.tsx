@@ -44,8 +44,8 @@ export const AppDetails: React.FC<AppDetailsProps> = ({ app, onBack }) => {
         Voltar para a loja
       </button>
 
-      <div className="bg-white rounded-sm shadow-md overflow-hidden border border-gray-100">
-        <div className="p-8 md:p-12">
+      <div className="">
+        <div className="py-8 md:py-12">
           <div className="flex flex-col md:flex-row gap-8 items-start">
             {/* App Icon */}
             <div className="w-32 h-32 md:w-48 md:h-48 bg-gray-50 rounded-2xl flex items-center justify-center p-4 border border-gray-100 shadow-sm shrink-0">
