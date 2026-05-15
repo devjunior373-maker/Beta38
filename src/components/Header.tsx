@@ -27,6 +27,7 @@ interface HeaderProps {
   onSearch: (query: string) => void;
   selectedPlatform: string;
   onSelectPlatform: (platform: string) => void;
+  onHomeClick: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({ 
@@ -36,7 +37,8 @@ export const Header: React.FC<HeaderProps> = ({
   onProjectsClick, 
   onSearch,
   selectedPlatform,
-  onSelectPlatform
+  onSelectPlatform,
+  onHomeClick
 }) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -77,7 +79,8 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Desktop: Logo/Search (Left) */}
-        <div className="hidden sm:flex items-center flex-1 max-w-xl">
+        <div className="hidden sm:flex items-center flex-1 max-w-xl gap-4">
+          <button onClick={onHomeClick} className="text-white font-black text-2xl tracking-tighter shrink-0">Beta38</button>
           <div className="relative flex-1">
             <input
               type="text"
@@ -93,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Mobile: Logo (Center) - Optional, helps branding on small screens */}
         <div className="sm:hidden flex-1 flex justify-center">
-          <span className="text-white font-black text-xl tracking-tighter">Beta38</span>
+          <button onClick={onHomeClick} className="text-white font-black text-xl tracking-tighter">Beta38</button>
         </div>
 
         {/* Desktop Controls & Mobile Search (Right) */}
@@ -239,7 +242,7 @@ export const Header: React.FC<HeaderProps> = ({
             >
               <div className="flex flex-col h-full">
                 <div className="p-4 border-b border-gray-100 flex items-center justify-between bg-[#1E90FF] text-white">
-                  <span className="text-2xl font-black tracking-tighter">Beta38</span>
+                  <button onClick={() => { onHomeClick(); setIsMobileMenuOpen(false); }} className="text-2xl font-black tracking-tighter">Beta38</button>
                   <button 
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="p-1 hover:bg-white/10 rounded-full transition-colors"

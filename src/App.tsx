@@ -7,6 +7,7 @@ import { AuthModal } from './components/AuthModal';
 import { PublishForm } from './components/PublishForm';
 import { ProjectsView } from './components/ProjectsView';
 import { AppCardSkeleton } from './components/Skeleton';
+import { AppDetails } from './components/AppDetails';
 import { TOP_DOWNLOADS } from './constants';
 import { motion, AnimatePresence } from 'motion/react';
 import { AppData } from './types';
@@ -15,7 +16,8 @@ export default function App() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apps, setApps] = useState<AppData[]>(TOP_DOWNLOADS);
-  const [currentView, setCurrentView] = useState<'home' | 'publish' | 'projects'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'publish' | 'projects' | 'app-details'>('home');
+  const [selectedApp, setSelectedApp] = useState<AppData | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedPlatform, setSelectedPlatform] = useState<string>('Android');
@@ -35,6 +37,9 @@ export default function App() {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
+    if (currentView !== 'home') {
+      setCurrentView('home');
+    }
     if (!isLoading) {
       setIsLoading(true);
       setTimeout(() => setIsLoading(false), 400);
@@ -70,6 +75,12 @@ export default function App() {
           setIsLoading(true);
           setTimeout(() => setIsLoading(false), 500);
         }}
+        onHomeClick={() => {
+          setCurrentView('home');
+          setSearchQuery('');
+          setSelectedCategory(null);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
       />
       
       <main className="flex-1 overflow-y-auto no-scrollbar pb-12">
@@ -102,7 +113,20 @@ export default function App() {
                       className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4"
                     >
                       {filteredApps.map((app) => (
-                        <AppCard key={app.id} app={app} />
+                        <AppCard 
+                          key={app.id} 
+                          app={app} 
+                          onClick={(app) => {
+                            setSelectedApp(app);
+                            setCurrentView('app-details');
+                            window.scrollTo({ top: 0, behavior: 'instant' });
+                          }}
+                          onTestClick={(app) => {
+                            setSelectedApp(app);
+                            setCurrentView('app-details');
+                            window.scrollTo({ top: 0, behavior: 'instant' });
+                          }}
+                        />
                       ))}
                     </motion.div>
                   ) : (
@@ -135,6 +159,14 @@ export default function App() {
               apps={apps.filter(app => !TOP_DOWNLOADS.some(t => t.id === app.id))}
               onBack={() => setCurrentView('home')}
               onPublishClick={() => setCurrentView('publish')}
+            />
+          )}
+
+          {currentView === 'app-details' && selectedApp && (
+            <AppDetails 
+              key="app-details"
+              app={selectedApp}
+              onBack={() => setCurrentView('home')}
             />
           )}
         </AnimatePresence>
