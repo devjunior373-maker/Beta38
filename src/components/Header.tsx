@@ -24,15 +24,20 @@ interface HeaderProps {
   isLoggedIn: boolean;
   onPublishClick: () => void;
   onProjectsClick: () => void;
+  onSearch: (query: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenAuth, isLoggedIn, onPublishClick, onProjectsClick }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenAuth, isLoggedIn, onPublishClick, onProjectsClick, onSearch }) => {
   const [selectedPlatform, setSelectedPlatform] = useState('Android');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onSearch(e.target.value);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -67,6 +72,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAuth, isLoggedIn, onPublis
           <div className="relative flex-1">
             <input
               type="text"
+              onChange={handleSearchChange}
               placeholder="Procurar aplicações"
               className="w-full bg-white h-10 px-4 pr-12 focus:outline-none placeholder:text-gray-400 rounded-sm"
             />
@@ -88,6 +94,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAuth, isLoggedIn, onPublis
             <div className="relative">
               <input
                 type="text"
+                onChange={handleSearchChange}
                 placeholder="Procurar..."
                 className="w-full bg-white/10 text-white h-8 px-2 pr-8 focus:bg-white focus:text-gray-900 focus:outline-none placeholder:text-white/60 focus:placeholder:text-gray-400 rounded-sm transition-all text-xs"
               />

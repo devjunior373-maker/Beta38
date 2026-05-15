@@ -16,12 +16,19 @@ export default function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [apps, setApps] = useState<AppData[]>(TOP_DOWNLOADS);
   const [currentView, setCurrentView] = useState<'home' | 'publish' | 'projects'>('home');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handlePublish = (newApp: AppData) => {
     setApps([newApp, ...apps]);
     setCurrentView('home');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
+
+  const filteredApps = apps.filter(app => 
+    app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.developer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    app.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className="flex flex-col min-h-screen font-sans selection:bg-[#79B400] selection:text-white bg-[#E6E6E6]">
@@ -30,6 +37,7 @@ export default function App() {
         isLoggedIn={isLoggedIn} 
         onPublishClick={() => isLoggedIn ? setCurrentView('publish') : setIsAuthModalOpen(true)}
         onProjectsClick={() => isLoggedIn ? setCurrentView('projects') : setIsAuthModalOpen(true)}
+        onSearch={setSearchQuery}
       />
       
       <main className="flex-1 overflow-y-auto no-scrollbar pb-12">
@@ -45,16 +53,22 @@ export default function App() {
               <PopularBar />
               <div className="px-6 py-8 md:px-12 relative max-w-screen-2xl mx-auto">
                 <div className="absolute top-0 left-0 w-48 h-24 bg-[#FF6300]" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}></div>
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2"
-                >
-                  {apps.map((app) => (
-                    <AppCard key={app.id} app={app} />
-                  ))}
-                </motion.div>
+                {filteredApps.length > 0 ? (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5 }}
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2"
+                  >
+                    {filteredApps.map((app) => (
+                      <AppCard key={app.id} app={app} />
+                    ))}
+                  </motion.div>
+                ) : (
+                  <div className="py-20 text-center">
+                    <p className="text-gray-500 text-xl font-bold">Nenhuma aplicação encontrada para "{searchQuery}"</p>
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
