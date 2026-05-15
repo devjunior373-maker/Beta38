@@ -25,10 +25,19 @@ interface HeaderProps {
   onPublishClick: () => void;
   onProjectsClick: () => void;
   onSearch: (query: string) => void;
+  selectedPlatform: string;
+  onSelectPlatform: (platform: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ onOpenAuth, isLoggedIn, onPublishClick, onProjectsClick, onSearch }) => {
-  const [selectedPlatform, setSelectedPlatform] = useState('Android');
+export const Header: React.FC<HeaderProps> = ({ 
+  onOpenAuth, 
+  isLoggedIn, 
+  onPublishClick, 
+  onProjectsClick, 
+  onSearch,
+  selectedPlatform,
+  onSelectPlatform
+}) => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -133,7 +142,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAuth, isLoggedIn, onPublis
                           selectedPlatform === platform.name ? 'bg-blue-50 text-[#1E90FF]' : 'text-gray-700 hover:bg-gray-50'
                         }`}
                         onClick={() => {
-                          setSelectedPlatform(platform.name);
+                          onSelectPlatform(platform.name);
                           setIsDropdownOpen(false);
                         }}
                       >
@@ -292,7 +301,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenAuth, isLoggedIn, onPublis
                         <button
                           key={platform.name}
                           onClick={() => {
-                            setSelectedPlatform(platform.name);
+                            onSelectPlatform(platform.name);
                             setIsMobileMenuOpen(false);
                           }}
                           className={`w-full flex items-center gap-4 py-3 px-4 rounded-sm transition-all ${

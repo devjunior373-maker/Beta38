@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Sidebar } from './components/Sidebar';
 import { Header } from './components/Header';
 import { Hero } from './components/Hero';
 import { PopularBar } from './components/PopularBar';
@@ -7,6 +6,7 @@ import { AppCard } from './components/AppCard';
 import { AuthModal } from './components/AuthModal';
 import { PublishForm } from './components/PublishForm';
 import { ProjectsView } from './components/ProjectsView';
+import { AppCardSkeleton } from './components/Skeleton';
 import { TOP_DOWNLOADS } from './constants';
 import { motion, AnimatePresence } from 'motion/react';
 import { AppData } from './types';
@@ -17,6 +17,9 @@ export default function App() {
   const [apps, setApps] = useState<AppData[]>(TOP_DOWNLOADS);
   const [currentView, setCurrentView] = useState<'home' | 'publish' | 'projects'>('home');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedPlatform, setSelectedPlatform] = useState<string>('Android');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePublish = (newApp: AppData) => {
     setApps([newApp, ...apps]);
@@ -24,11 +27,34 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const filteredApps = apps.filter(app => 
-    app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.developer.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    app.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const handleSelectCategory = (category: string | null) => {
+    setSelectedCategory(category);
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 600);
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (!isLoading) {
+      setIsLoading(true);
+      setTimeout(() => setIsLoading(false), 400);
+    }
+  };
+
+  const filteredApps = apps.filter(app => {
+    const matchesSearch = searchQuery === '' || 
+      app.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.developer.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      app.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    // We'll treat category as a filter if selected
+    const matchesCategory = !selectedCategory || app.category.toLowerCase() === selectedCategory.toLowerCase();
+
+    // Filter by platform
+    const matchesPlatform = app.platform.toLowerCase() === selectedPlatform.toLowerCase();
+    
+    return matchesSearch && matchesCategory && matchesPlatform;
+  });
 
   return (
     <div className="flex flex-col min-h-screen font-sans selection:bg-[#79B400] selection:text-white bg-[#E6E6E6]">
@@ -37,7 +63,13 @@ export default function App() {
         isLoggedIn={isLoggedIn} 
         onPublishClick={() => isLoggedIn ? setCurrentView('publish') : setIsAuthModalOpen(true)}
         onProjectsClick={() => isLoggedIn ? setCurrentView('projects') : setIsAuthModalOpen(true)}
-        onSearch={setSearchQuery}
+        onSearch={handleSearch}
+        selectedPlatform={selectedPlatform}
+        onSelectPlatform={(p) => {
+          setSelectedPlatform(p);
+          setIsLoading(true);
+          setTimeout(() => setIsLoading(false), 500);
+        }}
       />
       
       <main className="flex-1 overflow-y-auto no-scrollbar pb-12">
@@ -50,25 +82,41 @@ export default function App() {
               exit={{ opacity: 0 }}
             >
               <Hero />
-              <PopularBar />
+              <PopularBar onSelectCategory={handleSelectCategory} selectedCategory={selectedCategory} />
               <div className="px-6 py-8 md:px-12 relative max-w-screen-2xl mx-auto">
-                <div className="absolute top-0 left-0 w-48 h-24 bg-[#FF6300]" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}></div>
-                {filteredApps.length > 0 ? (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5 }}
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-2"
-                  >
-                    {filteredApps.map((app) => (
-                      <AppCard key={app.id} app={app} />
-                    ))}
-                  </motion.div>
-                ) : (
-                  <div className="py-20 text-center">
-                    <p className="text-gray-500 text-xl font-bold">Nenhuma aplicação encontrada para "{searchQuery}"</p>
-                  </div>
-                )}
+                <div className="relative">
+                  <div className="absolute top-0 left-0 w-48 h-24 bg-[#FF6300] -z-10" style={{ clipPath: 'polygon(0 0, 100% 0, 0 100%)' }}></div>
+                  
+                  {isLoading ? (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4">
+                      {Array.from({ length: 12 }).map((_, i) => (
+                        <AppCardSkeleton key={i} />
+                      ))}
+                    </div>
+                  ) : filteredApps.length > 0 ? (
+                    <motion.div 
+                      key="filtered-apps"
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5 }}
+                      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-6 gap-4"
+                    >
+                      {filteredApps.map((app) => (
+                        <AppCard key={app.id} app={app} />
+                      ))}
+                    </motion.div>
+                  ) : (
+                    <div className="py-20 text-center w-full">
+                      <p className="text-gray-500 text-xl font-bold">Nenhuma aplicação encontrada para os filtros selecionados</p>
+                      <button 
+                        onClick={() => {setSearchQuery(''); setSelectedCategory(null);}}
+                        className="mt-4 text-[#1E90FF] font-bold hover:underline"
+                      >
+                        Limpar todos os filtros
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </motion.div>
           )}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowLeft, Upload, Globe, Smartphone, Monitor, ChevronRight } from 'lucide-react';
+import { POPULAR_SEARCHES } from '../constants';
 import { AppData } from '../types';
 
 interface PublishFormProps {
@@ -15,6 +16,7 @@ export const PublishForm: React.FC<PublishFormProps> = ({ onBack, onPublish }) =
     description: '',
     version: '1.0.0',
     platform: 'Android',
+    category: POPULAR_SEARCHES[0],
     iconUrl: 'https://cdn-icons-png.flaticon.com/512/330/330430.png' // Default placeholder
   });
 
@@ -124,6 +126,19 @@ export const PublishForm: React.FC<PublishFormProps> = ({ onBack, onPublish }) =
                   placeholder="Ex: 1.0.0"
                   className="w-full h-12 px-4 bg-gray-50 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#1E90FF] focus:border-transparent transition-all"
                 />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider">Categoria</label>
+                <select 
+                  value={formData.category}
+                  onChange={(e) => setFormData({...formData, category: e.target.value})}
+                  className="w-full h-12 px-4 bg-gray-50 border border-gray-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-[#1E90FF] focus:border-transparent transition-all"
+                >
+                  {POPULAR_SEARCHES.map(cat => (
+                    <option key={cat} value={cat}>{cat}</option>
+                  ))}
+                </select>
               </div>
 
               <div className="space-y-2">

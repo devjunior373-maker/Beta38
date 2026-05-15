@@ -6,10 +6,5 @@ export interface AppData {
   version: string;
   iconUrl: string;
   category: string;
-}
-
-export interface SidebarItem {
-  name: string;
-  icon: string; // lucide icon name
-  activeColor?: string;
+  platform: string;
 }

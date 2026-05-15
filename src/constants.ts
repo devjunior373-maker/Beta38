@@ -1,14 +1,4 @@
-import { AppData, SidebarItem } from './types';
-
-export const SIDEBAR_ITEMS: SidebarItem[] = [
-  { name: 'Android', icon: 'Smartphone', activeColor: '#79B400' },
-  { name: 'Windows', icon: 'Monitor' },
-  { name: 'Mac', icon: 'Apple' },
-  { name: 'Ubuntu', icon: 'Box' },
-  { name: 'iPhone', icon: 'Tablet' },
-  { name: 'Webapps', icon: 'Cloud' },
-  { name: 'Blog', icon: 'PenTool' },
-];
+import { AppData } from './types';
 
 export const POPULAR_SEARCHES = [
   'Finanças',
@@ -31,7 +21,8 @@ export const TOP_DOWNLOADS: AppData[] = [
     description: 'The easiest way to download YouTube videos on your Android',
     version: '2.2.6.650',
     iconUrl: 'https://img.utdstc.com/icon/43e/841/43e8417c805a9c379532585292c10b27.png',
-    category: 'Video',
+    category: 'Entretenimento',
+    platform: 'Android',
   },
   {
     id: '2',
@@ -40,7 +31,8 @@ export const TOP_DOWNLOADS: AppData[] = [
     description: 'Fast and easily download YouTube music and HD videos',
     version: '2.25',
     iconUrl: 'https://img.utdstc.com/icon/33e/5a1/33e5a1b3b2b4b5b6b7b8b9b0b1b2b3b4.png',
-    category: 'Video',
+    category: 'Entretenimento',
+    platform: 'Android',
   },
   {
     id: '3',
@@ -49,7 +41,8 @@ export const TOP_DOWNLOADS: AppData[] = [
     description: 'The easiest and cheapest way to chat with your friends',
     version: '2.12.544',
     iconUrl: 'https://img.utdstc.com/icon/0a3/5bc/0a35bc3d843843e843843e843843e843.png',
-    category: 'Chat',
+    category: 'Redes Sociais',
+    platform: 'Android',
   },
   {
     id: '4',
@@ -58,7 +51,8 @@ export const TOP_DOWNLOADS: AppData[] = [
     description: 'Modify app permissions and break the limits',
     version: '6.0.8',
     iconUrl: 'https://img.utdstc.com/icon/1a3/5bc/1a35bc3d843843e843843e843843e843.png',
-    category: 'Tools',
+    category: 'Ferramentas',
+    platform: 'Android',
   },
   {
     id: '5',
@@ -67,7 +61,8 @@ export const TOP_DOWNLOADS: AppData[] = [
     description: 'The official Facebook Messenger App',
     version: '62.0.0.30.75',
     iconUrl: 'https://img.utdstc.com/icon/2a3/5bc/2a35bc3d843843e843843e843843e843.png',
-    category: 'Social',
+    category: 'Redes Sociais',
+    platform: 'Android',
   },
   {
     id: '6',
@@ -76,6 +71,27 @@ export const TOP_DOWNLOADS: AppData[] = [
     description: 'The fastest browsing experience',
     version: '10.1.4.573',
     iconUrl: 'https://img.utdstc.com/icon/3a3/5bc/3a35bc3d843843e843843e843843e843.png',
-    category: 'Browser',
+    category: 'Ferramentas',
+    platform: 'Android',
+  },
+  {
+    id: '7',
+    name: 'Kwanza Express',
+    developer: 'FinanceTech',
+    description: 'Gira as suas finanças de forma simples e segura.',
+    version: '1.2.0',
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png',
+    category: 'Finanças',
+    platform: 'Android',
+  },
+  {
+    id: '8',
+    name: 'Escola Virtual',
+    developer: 'EduCorp',
+    description: 'Aprenda qualquer coisa, em qualquer lugar.',
+    version: '3.0.1',
+    iconUrl: 'https://cdn-icons-png.flaticon.com/512/3534/3534033.png',
+    category: 'Educação',
+    platform: 'Android',
   }
 ];
